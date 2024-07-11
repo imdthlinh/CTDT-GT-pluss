@@ -3,6 +3,9 @@
 
 using namespace std;
 
+//f là một mảng động 2 chiều được sử dụng để lưu trữ thông tin về các dãy con có tổng chia hết cho k.
+//Mỗi phần tử f[i][t] lưu trữ độ dài của dãy con tối thiểu có tổng chia dư t khi chọn các phần tử từ A[0] đến A[i-1].
+
 void in(int **f, int n, int k)
 {
     cout << " n/t";
@@ -28,10 +31,10 @@ void in(int **f, int n, int k)
         cout << endl;
     }
 }
-
+//tính phần dư khi chia tổng các phần tử của mảng A cho k.
 int sub(int x, int y, int k)
 {
-    int tmp = (x - y) % k;
+    int tmp = (x - y) % k;       //lay phan du
     return tmp >= 0 ? tmp : tmp + k;
 }
 
@@ -51,20 +54,22 @@ int main()
              << "Tong =" << sum;
         return 0;
     }
-    int **f = new int *[n + 1];
+    int **f = new int *[n + 1];     //khai bao con tro 2 chieu cap phat dong cho 1 mang n + 1 phan tu
     for (int i = 0; i < n + 1; i++)
     {
-        f[i] = new int[k];
+        f[i] = new int[k];        //Với mỗi phần tử i của mảng f, ta cấp phát động một mảng int có k phần tử.
     }
-    // optimize
-    f[0][0] = 0;
+    // toi uu
+    f[0][0] = 0;            //dat phan tu dau tien bang 0
     for (int t = 1; t < k; t++)
-        f[0][t] = INT_MAX;
+        f[0][t] = INT_MAX;           //gia tri con lai của hàng dau tien cua mang f 
     for (int i = 1; i <= n; i++)
     {
         for (int t = 1; t < k; t++)
-        {
-            if (f[i - 1][t] < f[i - 1][sub(t, A[i - 1], k)] + 1)
+        {  //Với mỗi phần tử A[i-1] trong mảng A, thuật toán sẽ kiểm tra xem nếu thêm A[i-1] vào dãy con hiện tại (f[i-1][t]) thì tổng có chia hết cho k không.
+           //Nếu tổng chia hết cho k, thuật toán sẽ giữ nguyên dãy con hiện tại (f[i-1][t]).
+           //Nếu tổng không chia hết cho k, thuật toán sẽ thêm A[i-1] vào dãy con hiện tại và tăng độ dài dãy con lên 1 (f[i-1][sub(t, A[i-1], k)] + 1)
+            if (f[i - 1][t] < f[i - 1][sub(t, A[i - 1], k)] + 1)   
                 f[i][t] = f[i - 1][t];
             else
                 f[i][t] = f[i - 1][sub(t, A[i - 1], k)] + 1;
